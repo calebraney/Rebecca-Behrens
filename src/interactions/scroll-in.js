@@ -97,10 +97,17 @@ export const scrollIn = function (gsapContext) {
     //set heading to full opacity (check to see if needed)
     // item.style.opacity = 1;
     const tl = scrollInTL(item);
-    const tween = defaultTween(splitText.words, tl, { stagger: 'small', skew: 'large' });
+    const tween = defaultTween(splitText.words, tl, { stagger: 'small' });
     //add event calleback to revert text on completion
-    tl.eventCallback('onComplete', () => {
-      splitText.revert();
+    // tl.eventCallback('onComplete', () => {
+    //   splitText.revert();
+    // });
+    //revert split text when exiting viewport
+    ScrollTrigger.create({
+      trigger: item,
+      start: 'top bottom',
+      end: 'bottom top',
+      onLeave: (self) => splitText.revert(),
     });
   };
 
@@ -183,12 +190,12 @@ export const scrollIn = function (gsapContext) {
 
   const scrollInStagger = function (item) {
     if (!item) return;
-    const ease = attr(EASE_LARGE, item.getAttribute(SCROLL_STAGGER));
+    const staggerAmount = attr(EASE_LARGE, item.getAttribute(SCROLL_STAGGER));
     // get the children of the item
     const children = gsap.utils.toArray(item.children);
     if (children.length === 0) return;
     const tl = scrollInTL(item);
-    const tween = defaultTween(children, tl, { stagger: ease });
+    const tween = defaultTween(children, tl, { stagger: staggerAmount });
   };
 
   const scrollInRichText = function (item) {

@@ -1,6 +1,13 @@
 import { attr } from './utilities';
+import { initLenis } from './interactions/lenis';
 import { hoverActive } from './interactions/hover-active';
+import { load } from './interactions/load';
+import { loop } from './interactions/loop';
+import { marquee } from './interactions/marquee';
+import { parallax } from './interactions/parallax';
 import { scrollIn } from './interactions/scroll-in';
+import { scrolling } from './interactions/scrolling';
+import { createSlider } from './interactions/slider';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Comment out for production
@@ -15,6 +22,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //////////////////////////////
   //Global Variables
+
+  let lenis;
+
+  //////////////////////////////
+  //Slider instances
+
+  const caseGallerySlider = function () {
+    const COMPONENT = '.slider_layout';
+    const components = [...document.querySelectorAll(COMPONENT)];
+    const options = {
+      slidesPerView: 1,
+      loop: true,
+    };
+    //apply a module with defaults settings (canc override them using the options object above)
+    const modules = {
+      navigation: true,
+      pagination: true,
+      scrollbar: false,
+      autoplay: false,
+    };
+    const sliders = createSlider(components, options, modules);
+  };
+
+  //////////////////////////////
+  //Custom Interactions
 
   //////////////////////////////
   //Control Functions on page load
@@ -31,10 +63,17 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //functional interactions
+        lenis = initLenis();
         hoverActive(gsapContext);
+        marquee(gsapContext);
+        load(gsapContext);
+        loop(gsapContext);
+        //sliders
+        caseGallerySlider();
         //conditional interactions
         if (!reduceMotion) {
           scrollIn(gsapContext);
+          scrolling(gsapContext);
         }
       }
     );

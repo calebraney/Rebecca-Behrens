@@ -24,6 +24,7 @@
     "serve": "^14.1.2"
   },
   "dependencies": {
+    "@studio-freight/lenis": "^1.0.42",
     "split-type": "^0.3.4"
   }
 }
