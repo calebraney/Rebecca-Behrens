@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const COMPONENT = '.slider_layout';
     const components = [...document.querySelectorAll(COMPONENT)];
     const options = {
-      slidesPerView: 1,
-      loop: true,
+      slidesPerView: 'auto',
+      loop: false,
     };
     //apply a module with defaults settings (canc override them using the options object above)
     const modules = {
@@ -47,6 +47,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //////////////////////////////
   //Custom Interactions
+
+  const homeWork = function () {
+    const SECTION = '[data-ix-work="wrap"]';
+    const ITEM = '[data-ix-work="item"]';
+    const LINKS = '[data-ix-work="link"]';
+
+    //elements
+    const wraps = [...document.querySelectorAll(SECTION)];
+    if (wraps.length === 0) return;
+
+    //for each section
+    wraps.forEach((wrap) => {
+      const items = [...wrap.querySelectorAll(ITEM)];
+
+      items.forEach((item, i) => {
+        if (!item) return;
+
+        let nextItem = items[i + 1];
+        if (!nextItem) return;
+        let tl = gsap.timeline({
+          defaults: {
+            duration: 1,
+            ease: 'power2.out',
+          },
+          scrollTrigger: {
+            trigger: nextItem,
+            start: 'top 100%',
+            end: 'top 112px',
+            scrub: true,
+          },
+        });
+        tl.fromTo(
+          item,
+          {
+            scale: 1,
+          },
+          {
+            scale: 0.9,
+          }
+        );
+        // tl.fromTo(
+        //   item,
+        //   {
+        //     filter: 'blur(0px)',
+        //   },
+        //   {
+        //     filter: 'blur(12px)',
+        //     ease: 'circ.out',
+        //     duration: 0.6,
+        //   },
+        //   '<.4'
+        // );
+      });
+    });
+  };
 
   //////////////////////////////
   //Control Functions on page load
@@ -68,6 +123,9 @@ document.addEventListener('DOMContentLoaded', function () {
         marquee(gsapContext);
         load(gsapContext);
         loop(gsapContext);
+        if (isDesktop) {
+          homeWork();
+        }
         //sliders
         caseGallerySlider();
         //conditional interactions
