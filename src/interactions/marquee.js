@@ -9,6 +9,7 @@ export const marquee = function (gsapContext) {
   const DURATION = 'data-ix-marquee-duration'; //set a custom duration in seconds
   const DYNAMIC_DURATION = 'data-ix-marquee-duration-dynamic'; // set to true to make the duration dynamic per amount of items
   const DURATION_PER_ITEM = 'data-ix-marquee-duration-per-item'; // the duration per the amount of items
+  const DUPLICATE_LIST = 'data-ix-marquee-duplicate-list';
   const HOVER_EFFECT = 'data-ix-marquee-hover'; //option for hover effect
   const ACCELERATE_ON_HOVER = 'accelerate';
   const DECELERATE_ON_HOVER = 'decelerate';
@@ -16,19 +17,29 @@ export const marquee = function (gsapContext) {
   //defaults
   const DEFAULT_DURATION = 30;
   const DEFAULT_DYNAMIC_DURATION = 5;
-
   //for each wrap
-  const wraps = document.querySelectorAll(WRAP);
+  const wraps = [...document.querySelectorAll(WRAP)];
+
   if (wraps.length === 0) return;
   wraps.forEach((wrap) => {
     //check to run on breakpoint
     let runOnBreakpoint = checkBreakpoints(wrap, ANIMATION_ID, gsapContext);
     if (runOnBreakpoint === false) return;
 
-    const lists = [...wrap.querySelectorAll(LIST)];
+    let lists = [...wrap.querySelectorAll(LIST)];
     let reverse = attr(false, wrap.getAttribute(REVERSE));
     let duration = attr(DEFAULT_DURATION, wrap.getAttribute(DURATION));
     let durationDynamic = attr(false, wrap.getAttribute(DYNAMIC_DURATION));
+    let duplicateList = attr(false, wrap.getAttribute(DUPLICATE_LIST));
+
+    if (duplicateList) {
+      let firstList = lists[0];
+      console.log(lists[0]);
+      let newList = firstList.cloneNode(true);
+      wrap.appendChild(newList);
+      lists = [...wrap.querySelectorAll(LIST)];
+    }
+
     let durationPerItem = attr(DEFAULT_DYNAMIC_DURATION, wrap.getAttribute(DURATION_PER_ITEM));
     // get the amount of items in the wrap
     let itemCount = lists[0].childElementCount;
