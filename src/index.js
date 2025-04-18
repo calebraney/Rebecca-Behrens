@@ -48,6 +48,99 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   //Custom Interactions
 
+  const navShowAndHide = function () {
+    //elements
+    const NAV = '[data-ix-nav="nav"]';
+    const NAV_BG = '[data-ix-nav="bg"]';
+    //classes
+    const HIDDEN_CLASS = 'is-hidden';
+
+    const nav = document.querySelector(NAV);
+    const navBg = document.querySelector(NAV_BG);
+    if (!nav || !navBg) return;
+
+    //variable to check last scroll distance
+    let lastScrollTop = 0;
+
+    function scrollDirectionListener() {
+      //check the current scroll distance from the top
+      let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      //compare current scroll distance to last scroll distance
+      if (currentScrollTop > lastScrollTop) {
+        //user is scrolling down
+        nav.classList.add(HIDDEN_CLASS);
+      } else {
+        //user is scrolling up
+        nav.classList.remove(HIDDEN_CLASS);
+      }
+
+      if (currentScrollTop === 0) {
+        //user is at the top of the page
+        navBg.classList.add(HIDDEN_CLASS);
+      } else {
+        //user is not at the top of the page.
+        navBg.classList.remove(HIDDEN_CLASS);
+      }
+      // For Mobile or negative scrolling
+      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    }
+    window.addEventListener('scroll', scrollDirectionListener);
+  };
+
+  const navLinkHover = function () {
+    const NAV_LINK = '[data-ix-navhover="item"]';
+    const NAV_LINK_BG = '[data-ix-navhover="bg"]';
+    const NAV_MENU = '[data-ix-navhover="menu"]';
+    //options
+    const ACTIVE_CLASS = 'is-hovered';
+    // hover menu tracking
+    let menuHover = false;
+
+    const bg = document.querySelector(NAV_LINK_BG);
+    const menu = document.querySelector(NAV_MENU);
+    const links = document.querySelectorAll(NAV_LINK);
+    //check for elements
+    if (!bg || !menu || links.length === 0) return;
+
+    //function to handle events
+    const activateLink = function (item, hoverIn = true) {
+      //if hover in append the background and add active classes
+      if (hoverIn) {
+        //get state
+        let state = Flip.getState(bg);
+        //append background and add active classes
+        item.append(bg);
+        item.classList.add(ACTIVE_CLASS);
+        // animate
+        Flip.from(state, {
+          duration: menuHover ? 0.4 : 0,
+          ease: 'power2.out',
+        });
+      } else {
+        //if hover out remove active class
+        item.classList.remove(ACTIVE_CLASS);
+      }
+    };
+    //menu hover and tracking
+    menu.addEventListener('mouseover', function () {
+      menuHover = true;
+    });
+    menu.addEventListener('mouseleave', function () {
+      menuHover = false;
+      const lastLink = links[links.length - 1];
+      activateLink(lastLink);
+    });
+    //link hover and flip
+    links.forEach((item) => {
+      item.addEventListener('mouseover', function () {
+        activateLink(item);
+      });
+      item.addEventListener('mouseleave', function () {
+        activateLink(item, false);
+      });
+    });
+  };
+
   const homeWork = function () {
     const SECTION = '[data-ix-work="wrap"]';
     const ITEM = '[data-ix-work="item"]';
@@ -119,6 +212,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //functional interactions
         lenis = initLenis();
+        navShowAndHide();
+        navLinkHover();
         hoverActive(gsapContext);
         marquee(gsapContext);
         load(gsapContext);
