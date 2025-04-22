@@ -90,15 +90,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const navLinkHover = function () {
     const NAV_LINK = '[data-ix-navhover="item"]';
     const NAV_LINK_BG = '[data-ix-navhover="bg"]';
-    const NAV_MENU = '[data-ix-navhover="menu"]';
+    const NAV_MENU = '[data-ix-navhover="menu"].is-desktop';
     //options
-    const ACTIVE_CLASS = 'is-hovered';
-    // hover menu tracking
-    let menuHover = false;
+    const ACTIVE_CLASS = 'is-active';
 
     const bg = document.querySelector(NAV_LINK_BG);
     const menu = document.querySelector(NAV_MENU);
-    const links = document.querySelectorAll(NAV_LINK);
+    const links = menu.querySelectorAll(NAV_LINK);
     //check for elements
     if (!bg || !menu || links.length === 0) return;
 
@@ -107,13 +105,22 @@ document.addEventListener('DOMContentLoaded', function () {
       //if hover in append the background and add active classes
       if (hoverIn) {
         //get state
-        let state = Flip.getState(bg);
+        let state = Flip.getState([links, bg], {
+          props: 'backgroundColor,color',
+          simple: true,
+        });
         //append background and add active classes
         item.append(bg);
-        item.classList.add(ACTIVE_CLASS);
+        links.forEach((link) => {
+          if (link === item) {
+            link.classList.add(ACTIVE_CLASS);
+          } else {
+            link.classList.remove(ACTIVE_CLASS);
+          }
+        });
         // animate
         Flip.from(state, {
-          duration: menuHover ? 0.4 : 0,
+          duration: 0.6,
           ease: 'power2.out',
         });
       } else {
@@ -121,22 +128,16 @@ document.addEventListener('DOMContentLoaded', function () {
         item.classList.remove(ACTIVE_CLASS);
       }
     };
-    //menu hover and tracking
-    menu.addEventListener('mouseover', function () {
-      menuHover = true;
-    });
     menu.addEventListener('mouseleave', function () {
-      menuHover = false;
+      // get the last link in the list
       const lastLink = links[links.length - 1];
+      //animate to the last link in the list on hover out of the menu
       activateLink(lastLink);
     });
     //link hover and flip
     links.forEach((item) => {
       item.addEventListener('mouseover', function () {
         activateLink(item);
-      });
-      item.addEventListener('mouseleave', function () {
-        activateLink(item, false);
       });
     });
   };
