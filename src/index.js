@@ -45,6 +45,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const sliders = createSlider(components, options, modules);
   };
 
+  // const caseGallerySlider = function () {
+  //   const COMPONENT = '.splide';
+  //   const components = [...document.querySelectorAll(COMPONENT)];
+  //   components.forEach((item) => {
+  //     const slider = new Splide(item, {
+  //       type: 'slide',
+  //       perPage: 1,
+  //     });
+  //     console.log(slider);
+  //   });
+  // };
   //////////////////////////////
   //Custom Interactions
 
