@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   //Custom Interactions
 
-  const navShowAndHide = function () {
+  const navShowAndHide = function (lenis) {
     //elements
     const NAV = '[data-ix-nav="nav"]';
     const NAV_BG = '[data-ix-nav="bg"]';
@@ -76,14 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function scrollDirectionListener() {
       //check the current scroll distance from the top
       let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      //compare current scroll distance to last scroll distance
-      if (currentScrollTop > lastScrollTop) {
-        //user is scrolling down
-        nav.classList.add(HIDDEN_CLASS);
-      } else {
-        //user is scrolling up
-        nav.classList.remove(HIDDEN_CLASS);
-      }
 
       if (currentScrollTop === 0) {
         //user is at the top of the page
@@ -92,10 +84,22 @@ document.addEventListener('DOMContentLoaded', function () {
         //user is not at the top of the page.
         navBg.classList.remove(HIDDEN_CLASS);
       }
+
+      //compare current scroll distance to last scroll distance
+      if (currentScrollTop > lastScrollTop) {
+        //user is scrolling down
+        nav.classList.add(HIDDEN_CLASS);
+      } else {
+        //user is scrolling up
+        nav.classList.remove(HIDDEN_CLASS);
+      }
       // For Mobile or negative scrolling
       lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
     }
     window.addEventListener('scroll', scrollDirectionListener);
+    // lenis.on('scroll', (e) => {
+    //   scrollDirectionListener();
+    // });
   };
 
   const navLinkHover = function () {
@@ -118,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //get state
         let state = Flip.getState([links, bg], {
           props: 'backgroundColor,color',
-          simple: true,
+          simple: false,
         });
         //append background and add active classes
         item.append(bg);
@@ -179,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
           scrollTrigger: {
             trigger: nextItem,
             start: 'top 100%',
-            end: 'top 112px',
+            end: 'top 48px',
             scrub: true,
           },
         });
@@ -223,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
       (gsapContext) => {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //functional interactions
-        lenis = initLenis();
-        navShowAndHide();
+        // lenis = initLenis();
+        navShowAndHide(lenis);
         navLinkHover();
         hoverActive(gsapContext);
         marquee(gsapContext);
