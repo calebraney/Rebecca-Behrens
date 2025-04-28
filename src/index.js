@@ -115,8 +115,14 @@ document.addEventListener('DOMContentLoaded', function () {
     //check for elements
     if (!bg || !menu || links.length === 0) return;
 
+    // hover menu tracking
+    let lastItem = links[0];
+    // hover menu tracking
+    let menuHover = false;
+
     //function to handle events
     const activateLink = function (item, hoverIn = true) {
+      lastItem = item;
       //if hover in append the background and add active classes
       if (hoverIn) {
         //get state
@@ -126,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         //append background and add active classes
         item.append(bg);
+        bg.classList.add(ACTIVE_CLASS);
         links.forEach((link) => {
           if (link === item) {
             link.classList.add(ACTIVE_CLASS);
@@ -135,19 +142,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         // animate
         Flip.from(state, {
-          duration: 0.6,
+          duration: menuHover ? 0.6 : 0,
           ease: 'power2.out',
         });
       } else {
-        //if hover out remove active class
-        item.classList.remove(ACTIVE_CLASS);
+        //hover out
+        let state = Flip.getState([links, bg], {
+          props: 'backgroundColor,color',
+          simple: false,
+        });
+        //append background and add active classes
+        item.append(bg);
+        bg.classList.remove(ACTIVE_CLASS);
+        links.forEach((link) => {
+          link.classList.remove(ACTIVE_CLASS);
+        });
+        // animate
+        Flip.from(state, {
+          duration: 0.3,
+          ease: 'power2.out',
+        });
       }
     };
+    menu.addEventListener('mouseenter', function () {
+      menuHover = true;
+    });
     menu.addEventListener('mouseleave', function () {
+      menuHover = false;
       // get the last link in the list
-      const lastLink = links[links.length - 1];
+      bg.classList.remove(ACTIVE_CLASS);
+      activateLink(lastItem, false);
       //animate to the last link in the list on hover out of the menu
-      activateLink(lastLink);
+      // activateLink(lastLink);
     });
     //link hover and flip
     links.forEach((item) => {
