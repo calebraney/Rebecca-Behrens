@@ -92,22 +92,15 @@ export const scrollIn = function (gsapContext) {
       item = item.firstChild;
     }
     //split the text
-    const splitText = runSplit(item);
-    if (!splitText) return;
-    //set heading to full opacity (check to see if needed)
-    // item.style.opacity = 1;
-    const tl = scrollInTL(item);
-    const tween = defaultTween(splitText.words, tl, { stagger: 'small' });
-    //add event calleback to revert text on completion
-    // tl.eventCallback('onComplete', () => {
-    //   splitText.revert();
-    // });
-    //revert split text when exiting viewport
-    ScrollTrigger.create({
-      trigger: item,
-      start: 'top bottom',
-      end: 'bottom top',
-      onLeave: (self) => splitText.revert(),
+    SplitText.create(item, {
+      type: 'words', // 'chars, words, lines
+      autoSplit: true, //have it auto adjust based on width
+      mask: true,
+      onSplit(self) {
+        // animation to run for the item
+        const tl = scrollInTL(item);
+        return (tween = defaultTween(self.words, tl, { stagger: 'small' })); //   duration: 1,
+      },
     });
   };
 

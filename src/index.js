@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let { isMobile, isTablet, isDesktop, reduceMotion } = gsapContext.conditions;
         //functional interactions
         // lenis = initLenis();
-        navShowAndHide(lenis);
+        navShowAndHide();
         navLinkHover();
         hoverActive(gsapContext);
         marquee(gsapContext);
