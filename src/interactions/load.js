@@ -43,18 +43,24 @@ export const load = function (gsapContext) {
       item.style.opacity = '1';
       item = item.firstChild;
     }
-    //split the text
-    const splitText = runSplit(item);
-    if (!splitText) return;
-    // get the position attribute
+    //get text positions
     const position = attr('<', item.getAttribute(POSITION));
-    tl.set(item, { opacity: 1 });
-    tl.fromTo(
-      splitText.lines,
-      { opacity: 0, y: '50%' },
-      { opacity: 1, y: '0%', stagger: { each: 0.1, from: 'left' } },
-      position
-    );
+    // split text and animate it
+    SplitText.create(item, {
+      type: 'lines',
+      autoSplit: false,
+      onSplit: (self) => {
+        return tl.from(
+          self.lines,
+          {
+            y: '2rem',
+            opacity: 0,
+            stagger: 0.1,
+          },
+          position
+        );
+      },
+    });
   };
   //images load tween
   const loadImage = function (item) {
