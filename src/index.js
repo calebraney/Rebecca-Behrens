@@ -28,6 +28,21 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   //Slider instances
 
+  const hideNavOnMobileClick = function () {
+    const LINK = '.nav_links_link';
+    const MENU = '.nav_btn_wrap';
+    const ACTIVE_CLASS = 'w--open';
+    const links = [...document.querySelectorAll(LINK)];
+    const menuButton = document.querySelector(MENU);
+    links.forEach((item) => {
+      item.addEventListener('click', (e) => {
+        // e.preventDefault();
+        console.log('click');
+        menuButton.click();
+      });
+    });
+  };
+
   const caseGallerySlider = function () {
     const COMPONENT = '.slider_layout';
     const components = [...document.querySelectorAll(COMPONENT)];
@@ -264,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
           homeWork();
         }
         //sliders
+        hideNavOnMobileClick();
         caseGallerySlider();
         //conditional interactions
         if (!reduceMotion) {
