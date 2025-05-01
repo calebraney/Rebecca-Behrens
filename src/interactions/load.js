@@ -40,9 +40,9 @@ export const load = function (gsapContext) {
   const loadHeading = function (item) {
     //check if item is rich text and if it is find the first child and set it to be the heading
     if (item.classList.contains('w-richtext')) {
-      item.style.opacity = '1';
       item = item.firstChild;
     }
+    item.style.opacity = '1';
     //get text positions
     const position = attr('<', item.getAttribute(POSITION));
     // split text and animate it
