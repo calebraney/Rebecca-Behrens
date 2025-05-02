@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
   //////////////////////////////
   //Slider instances
 
+  //when alink is clicked in the nav menu close the menu
   const hideNavOnMobileClick = function () {
     const LINK = '.nav_links_link';
     const MENU = '.nav_btn_wrap';
@@ -76,14 +77,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const navShowAndHide = function (lenis) {
     //elements
-    const NAV = '[data-ix-nav="nav"]';
+    const NAV_DESKTOP = '[data-ix-nav="nav-desktop"]';
+    const NAV_MOBILE = '[data-ix-nav="nav-mobile"]';
     const NAV_BG = '[data-ix-nav="bg"]';
     //classes
     const HIDDEN_CLASS = 'is-hidden';
 
-    const nav = document.querySelector(NAV);
-    const navBg = document.querySelector(NAV_BG);
-    if (!nav || !navBg) return;
+    const navDesktop = document.querySelector(NAV_DESKTOP);
+    const navMobile = document.querySelector(NAV_MOBILE);
+    const navDesktopBg = navDesktop.querySelector(NAV_BG);
+    const navMobileBg = navMobile.querySelector(NAV_BG);
+
+    console.log(navDesktop, navMobile, navDesktopBg);
+    if (!navDesktop || !navMobile) return;
 
     //variable to check last scroll distance
     let lastScrollTop = 0;
@@ -94,19 +100,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (currentScrollTop === 0) {
         //user is at the top of the page
-        navBg.classList.add(HIDDEN_CLASS);
+        console.log('down');
+        navDesktopBg.classList.add(HIDDEN_CLASS);
+        navMobileBg.classList.add(HIDDEN_CLASS);
       } else {
         //user is not at the top of the page.
-        navBg.classList.remove(HIDDEN_CLASS);
+        navDesktopBg.classList.remove(HIDDEN_CLASS);
+        navMobileBg.classList.remove(HIDDEN_CLASS);
       }
 
       //compare current scroll distance to last scroll distance
       if (currentScrollTop > lastScrollTop) {
         //user is scrolling down
-        nav.classList.add(HIDDEN_CLASS);
+        navDesktop.classList.add(HIDDEN_CLASS);
+        navMobile.classList.add(HIDDEN_CLASS);
       } else {
         //user is scrolling up
-        nav.classList.remove(HIDDEN_CLASS);
+        navDesktop.classList.remove(HIDDEN_CLASS);
+        navMobile.classList.remove(HIDDEN_CLASS);
       }
       // For Mobile or negative scrolling
       lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
